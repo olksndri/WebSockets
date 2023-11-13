@@ -8,7 +8,6 @@ const messagesList = document.getElementById("msgs");
 
 const socket = io();
 const messages = [];
-const users = [];
 const LIMIT_MESSAGES = 10;
 
 const sendMessage = () => {
@@ -31,51 +30,35 @@ document.addEventListener("keydown", (evt) => {
   }
 });
 
-const renderListOfMessages = (updatedMessage) => {
-  messages.push(updatedMessage);
+const renderListOfMessages = (newMessage) => {
+  messages.push(newMessage);
 
   const li = document.createElement("li");
   li.classList.add("msgs_item");
 
   const name = document.createElement("p");
   const message = document.createElement("p");
-  name.textContent = updatedMessage.name;
-  message.textContent = updatedMessage.message;
 
+  name.textContent = newMessage.name;
+  message.textContent = newMessage.message;
   li.append(name, message);
-
   messagesList.append(li);
 };
 
-const renderListOfUsers = (user) => {
-  const id = Object.keys(user)[0];
-  let isUpdate = false;
-  let index;
-
-  for (let i = 0; i < users.length; i++) {
-    if (users[i][id]) {
-      isUpdate = true;
-      index = i;
-      break;
-    }
+const renderListOfUsers = (users) => {
+  if (Object.keys(users).length === 0) {
+    return;
   }
 
-  if (isUpdate) {
-    users.splice(index, 1, user);
-  } else {
-    users.push(user);
-  }
+  const activeUsers = [];
 
-  const activeUsers = users
-    .filter((el) => {
-      return Object.keys(el).length > 0;
-    })
-    .map((el) => {
-      const li = document.createElement("li");
-      li.classList.add("user");
-      li.textContent = Object.values(el)[0];
-      return li;
-    });
+  for (let key in users) {
+    const li = document.createElement("li");
+    li.classList.add("user");
+    li.textContent = users[key];
+
+    activeUsers.push(li);
+  }
 
   usersList.innerHTML = "";
   usersList.append(...activeUsers);
