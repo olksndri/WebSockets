@@ -1,0 +1,6 @@
+{
+  "ext": "js",
+  "watch": "*.js",
+  "verbose": true,
+  "quiet": true
+}
